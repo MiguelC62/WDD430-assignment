@@ -7,10 +7,11 @@ import { Contact } from '../contact.model';
   styleUrls: ['./contact-detail.component.css']
 })
 export class ContactDetailComponent implements OnInit {
-  @Input() contact: Contact | undefined;
+  @Input() contact: Contact;
     
   constructor () {}
+  
   ngOnInit() {
   }
-  name = 'Miguel Condorí';
+ 
 }

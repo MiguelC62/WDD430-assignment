@@ -10,13 +10,16 @@ import {MOCKCONTACTS} from './MOCKCONTACTS';
 export class ContactService {
   private contacts: Contact[] = [];
 
-  contactSelectedEvent: EventEmitter<Contact> = new EventEmitter<Contact>();
+  contactSelectedEvent = new EventEmitter<Contact>();
 
   constructor() { 
     this.contacts = MOCKCONTACTS;
   }
-  getContacts() {
-    return this.contacts.slice();
+
+  getContacts(): Contact[] {
+    return this.contacts
+    .sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1: 0)
+    .slice();
   }
 
   getContact(id: string): Contact {

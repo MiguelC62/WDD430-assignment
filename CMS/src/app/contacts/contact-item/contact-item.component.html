@@ -6,7 +6,8 @@
         <img 
         [src]="contact?.imageUrl" 
         alt="{{ contact?.name }}" 
-        class="img-responsive" 
+        class="img-responsive"
+        style="max-height: 50px;"
         *ngIf="contact?.imageUrl">
     </span>
 </a>

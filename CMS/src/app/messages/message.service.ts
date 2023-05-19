@@ -9,12 +9,14 @@ import { MOCKMESSAGES } from './MOCKMESSAGES';
 })
 export class MessageService {
   private messages: Message[] = [];
-  messageChangedEvent: EventEmitter<Message[]> = new EventEmitter<Message[]>();
+
+  messageChangedEvent = new EventEmitter<Message[]>();
 
   constructor() { 
     this.messages = MOCKMESSAGES;
   }
-  getMessages() {
+  
+  getMessages(): Message [] {
     return this.messages.slice();
   }
 

@@ -12,9 +12,9 @@
             <div class="row">
                 <div class="col-xs-12 margin-top">
                    <cms-contact-item 
-                   *ngFor="let contactEl of contacts"
-                   [contact]="contactEl"
-                   (click)="onSelected(contactEl)">
+                   *ngFor="let contact of contacts"
+                   [contact]="contact"
+                   (click)="onSelected(contact)">
                 </cms-contact-item>
                 </div>
             </div>
