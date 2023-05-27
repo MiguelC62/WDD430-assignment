@@ -8,23 +8,31 @@ import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
   providedIn: 'root'
 })
 export class DocumentService {
-  private documents: Document[] = [];
+  documents: Document[] = [];
 
-  documentSelectedEvent: EventEmitter<Document> = new EventEmitter<Document>();
+  //documentSelectedEvent = new EventEmitter<Document>();
+  documentChangedEvent = new EventEmitter<Document[]>();
 
   constructor() { 
     this.documents = MOCKDOCUMENTS;
   }
-  getDocuments() {
+  getDocuments(): Document[] {
     return this.documents.slice();
   }
 
   getDocument(id: string): Document {
-    for (const document of this.documents) {
-      if (document.id === id) {
-        return document;
-      }
-    }
-    return null;
+     return this.documents.find((document) => document.id === id);
    } 
+
+  deleteDocument(document: Document) {
+  if (!document) {
+      return;
+  }
+  const pos = this.documents.indexOf(document);
+  if (pos < 0) {
+      return;
+  }
+  this.documents.splice(pos, 1);
+  this.documentChangedEvent.emit(this.documents.slice());
+ }
 }

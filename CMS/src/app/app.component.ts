@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Contact } from './contacts/contact.model';
 
 @Component({
   selector: 'cms-root',
@@ -7,12 +6,6 @@ import { Contact } from './contacts/contact.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'cms';
-  selectedFeature = 'documents';
-
-  switchView(selectedFeature: string){
-
-    this.selectedFeature = selectedFeature;
-  }
+  title = 'CMS';
 
 }
