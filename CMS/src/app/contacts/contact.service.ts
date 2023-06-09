@@ -11,9 +11,6 @@ export class ContactService {
   maxContactId: number = 0;
   contactListChangedEvent = new Subject<Contact[]>();
 
-  //contactChangedEvent = new EventEmitter<Contact[]>();
-  //contactChangedEvent: any;
-
   constructor() { 
     this.contacts = MOCKCONTACTS;
     this.maxContactId = this.getMaxId();
