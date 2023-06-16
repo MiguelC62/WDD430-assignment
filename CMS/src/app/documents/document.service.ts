@@ -1,23 +1,56 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Document } from './document.model';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DocumentService {
   documents: Document[] = [];
   maxDocumentId: number = 0;
   documentListChangedEvent =new Subject<Document[]>();
+  private firebaseUrl = 'https://maccms-91845-default-rtdb.firebaseio.com/documents.json';
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
 
-  constructor() { 
+  constructor(private http: HttpClient) { 
     this.documents = MOCKDOCUMENTS;
     this.maxDocumentId = this.getMaxId();
   }
-  getDocuments(): Document[] {
-    return this.documents.slice();
+  
+  storeDocuments(documents: Document[]): void {
+    const documentListString = JSON.stringify(documents);
+    this.http.put(this.firebaseUrl, documentListString, this.httpOptions)
+      .subscribe(() => {
+        const documentsListClone = this.documents.slice();
+        this.documentListChangedEvent.next(documentsListClone);
+      });
   }
+  
+  getDocuments(): Observable<Document[]> {
+    return new Observable((observer) => {
+      this.http.get<Document[]>(this.firebaseUrl)
+        .subscribe({
+          next: (documents: Document[]) => {
+            this.documents = documents;
+            this.maxDocumentId = this.getMaxId();
+            this.documents.sort((a, b) => a.name.localeCompare(b.name));
+            this.documentListChangedEvent.next(this.documents.slice());
+          },
+          error: (error: any) => {
+            console.error('An error occurred:', error);
+            observer.error(error);
+          }
+    });
+    });
+  }
+    
 
   getDocument(id: string): Document {
      return this.documents.find((document) => document.id === id);
@@ -32,9 +65,8 @@ export class DocumentService {
       return;
   }
   this.documents.splice(pos, 1);
-  const documentsListClone = this.documents.slice();
-  this.documentListChangedEvent.next(documentsListClone);
 
+  this.storeDocuments(this.documents);
  }
 
  getMaxId(): number {
@@ -58,8 +90,7 @@ addDocument(newDocument: Document) {
   this.maxDocumentId++;
   newDocument.id = this.maxDocumentId.toString();
   this.documents.push(newDocument);
-  const documentsListClone = this.documents.slice();
-  this.documentListChangedEvent.next(documentsListClone);
+  this.storeDocuments(this.documents);
 }
 
 updateDocument(originalDocument: Document, newDocument: Document) {
@@ -74,10 +105,8 @@ updateDocument(originalDocument: Document, newDocument: Document) {
 
   newDocument.id = originalDocument.id;
   this.documents[pos] = newDocument;
-  const documentsListClone = this.documents.slice();
-  this.documentListChangedEvent.next(documentsListClone);
+  this.storeDocuments(this.documents);
 }
-
 
 }
 
