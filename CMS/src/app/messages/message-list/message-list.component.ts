@@ -12,17 +12,8 @@ export class MessageListComponent implements OnInit {
   messages: Message[] = [];
   subscription: Subscription;
 
-  constructor(private messageService: MessageService){
-    this.messageService.getMessages().subscribe({
-      next: (messages: Message[]) => {
-        this.messages = messages;
-      },
-      error: (error: any) => {
-        console.error('An error occurred:', error);
-      }
-  });
-  }
-
+  constructor(private messageService: MessageService){}
+  
   ngOnInit(){
    //suscribe to message chage event in message service
    this.subscription = this.messageService.messageListChangedEvent

@@ -1,4 +1,5 @@
 // Get dependencies
+var mongoose = require('mongoose');
 var express = require('express');
 var path = require('path');
 var http = require('http');
@@ -8,17 +9,24 @@ var logger = require('morgan');
 
 // import the routing file to handle the default (index) route
 var index = require('./server/routes/app');
+
 const messageRoutes = require('./server/routes/messages');
 const contactRoutes = require('./server/routes/contacts');
-const documentsRoutes = require('./server/routes/documents');
+const documentRoutes = require('./server/routes/documents');
 
-// ... ADD CODE TO IMPORT YOUR ROUTING FILES HERE ... 
+
+// establish a connection to the mongo database
+//***Change  yourPort and yourDatabase */
+mongoose.connect("mongodb://localhost:27017/cms", 
+{ useNewUrlParser: true })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.log("Connection failed: " + err));
 
 var app = express(); // create an instance of express
 
 // Tell express to use the following parsers for POST data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+app.use(express.json());
+app.use(express.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
@@ -45,9 +53,11 @@ app.use(express.static(path.join(__dirname, 'dist/cms')));
 
 // Tell express to map the default route ('/') to the index route
 app.use('/', index);
-app.use('/messages', messageRoutes);
-app.use('/contacts', contactRoutes);
-app.use('/documents', documentsRoutes);
+
+// ... ADD YOUR CODE TO MAP YOUR URL'S TO ROUTING FILES HERE ...
+app.use('/api/messages', messageRoutes);
+app.use('/api/contacts', contactRoutes);
+app.use('/api/documents', documentRoutes);
 
 // ... ADD YOUR CODE TO MAP YOUR URL'S TO ROUTING FILES HERE ...
 //Catch 404 and forward to error handler
@@ -70,3 +80,4 @@ const server = http.createServer(app);
 server.listen(port, function() {
   console.log('API running on localhost: ' + port)
 });
+

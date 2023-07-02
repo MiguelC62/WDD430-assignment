@@ -19,6 +19,14 @@
                 <div class="list-grup-item-heding">
                     Phone: {{ contact?.phone }}
                 </div>
+                <div *ngIf="contact.group && contact.group.length > 0">
+                    <h2>Gruop Members:</h2>
+                    <ul>
+                        <li *ngFor=" let groupContact of contact.group">
+                            <p>{{ groupContact.name }}</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

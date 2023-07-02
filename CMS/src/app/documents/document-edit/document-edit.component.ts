@@ -30,7 +30,10 @@ export class DocumentEditComponent implements OnInit {
         return;
       }
 
-      this.originalDocument = this.documentService.getDocument(this.id);
+      this.documentService.getDocument(this.id)
+      .subscribe(response => {
+        this.originalDocument = response.document;
+      });
       if (this.originalDocument === undefined || this.originalDocument === null) {
         return;
       }
@@ -42,7 +45,7 @@ export class DocumentEditComponent implements OnInit {
 
     onSubmit(form: NgForm): void {
       const value = form.value; // Get values from form's fields
-      const newDocument = new Document(value.id,value.name, value.description, value.url, value.children);
+      const newDocument = new Document(value._id,value.id,value.name, value.description, value.url, value.children);
       // Assign the values in the form fields to the corresponding properties in newDocument
       newDocument.name = value.name;
       newDocument.url = value.url;
